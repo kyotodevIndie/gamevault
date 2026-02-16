@@ -9,7 +9,16 @@ export const createGameSchema = z.object({
   platforms: z.array(z.string()).default([]),
 })
 
-export const updateGameSchema = createGameSchema.partial()
+export const updateGameSchema = z.object({
+  title: z.string().min(2).max(255).optional(),
+  description: z.string().optional(),
+  short_description: z.string().max(500).optional(),
+  price: z.number().min(0).optional(),
+  tags: z.array(z.string()).optional(),
+  platforms: z.array(z.string()).optional(),
+  cover_url: z.string().url().optional(),
+  banner_url: z.string().url().optional(),
+})
 
 export const listGamesSchema = z.object({
   page: z.coerce.number().min(1).default(1),

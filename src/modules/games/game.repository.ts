@@ -100,6 +100,9 @@ export const gameRepository = {
     const fields: string[] = []
     const values: unknown[] = []
     let paramCount = 1
+    
+    console.log('UPDATE DATA:', data) // log temporário
+  console.log('FIELDS:', fields)    // log temporário
 
     if (data.title !== undefined) {
       fields.push(`title = $${paramCount}`)
@@ -137,7 +140,21 @@ export const gameRepository = {
       paramCount++
     }
 
+    if (data.cover_url !== undefined) {
+      fields.push(`cover_url = $${paramCount}`)
+      values.push(data.cover_url)
+      paramCount++
+    }
+    
+    if (data.banner_url !== undefined) {
+      fields.push(`banner_url = $${paramCount}`)
+      values.push(data.banner_url)
+      paramCount++
+    }
+
     if (fields.length === 0) return null
+
+    
 
     fields.push(`updated_at = now()`)
     values.push(id)

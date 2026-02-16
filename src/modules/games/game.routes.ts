@@ -1,9 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import { authenticate } from '../../shared/middlewares/auth'
+import { gameUploadController } from './game-upload.controller'
 import { gameController } from './game.controller'
 
 type IdParam = { Params: { id: string } }
 type SlugParam = { Params: { slug: string } }
+type UploadParam = { Params: { id: string; type: 'cover' | 'banner' } }
 
 export const gameRoutes = async (app: FastifyInstance) => {
   // Rotas públicas
@@ -17,4 +19,11 @@ export const gameRoutes = async (app: FastifyInstance) => {
   app.patch<IdParam>('/:id/publish', { preHandler: authenticate }, gameController.publish)
   app.patch<IdParam>('/:id/archive', { preHandler: authenticate }, gameController.archive)
   app.delete<IdParam>('/:id', { preHandler: authenticate }, gameController.delete)
+
+  // Upload
+  app.post<UploadParam>(
+    '/:id/images/:type',
+    { preHandler: authenticate },
+    gameUploadController.uploadImage,
+  )
 }

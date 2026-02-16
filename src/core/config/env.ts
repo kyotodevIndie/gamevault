@@ -7,9 +7,14 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   REDIS_URL: z.string().url(),
   JWT_SECRET: z.string().min(32),
-  JWT_EXPIRES_IN: z.coerce.number().default(604800),        // 7 dias em segundos
+  JWT_EXPIRES_IN: z.coerce.number().default(604800),
   JWT_REFRESH_SECRET: z.string().min(32),
-  JWT_REFRESH_EXPIRES_IN: z.coerce.number().default(2592000), // 30 dias em segundos
+  JWT_REFRESH_EXPIRES_IN: z.coerce.number().default(2592000),
+  STORAGE_ENDPOINT: z.string().url(),
+  STORAGE_REGION: z.string().default('us-east-1'),
+  STORAGE_ACCESS_KEY: z.string(),
+  STORAGE_SECRET_KEY: z.string(),
+  STORAGE_BUCKET: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

@@ -1,8 +1,10 @@
+import multipart from '@fastify/multipart'
 import fastify from 'fastify'
 import { connectCache, redis } from './core/cache/index'
 import { env } from './core/config/env'
 import { connectDatabase, db } from './core/database/index'
 import { logger } from './core/logger/index'
+import { connectStorage } from './core/storage/index'
 import { registerRoutes } from './http/routes/index'
 import { errorHandler } from './shared/middlewares/error-handler'
 
@@ -50,12 +52,21 @@ app.get('/health', async (request, reply) => {
   })
 })
 
-
 const start = async () => {
   try {
     await connectDatabase()
     await connectCache()
+    await connectStorage()
+    
+    await app.register(multipart, {
+      limits: {
+        fileSize: 1024 * 1024 * 10, // 10MB
+        files: 1,
+      },
+    })
+
     await registerRoutes(app)
+    
     await app.listen({
       port: env.PORT,
       host: '0.0.0.0',
